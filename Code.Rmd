@@ -89,6 +89,36 @@ names(tab[tab == max(tab)])
 
 
 # Question 2
+(1)	
+SELECT
+COUNT(ShipperID)
+FROM Orders
+WHERE ShipperID == 1
+
+54
+
+
+(2)	
+SELECT e.LastName 
+From Employees AS e
+WHERE (
+SELECT o.EmployeeID
+FROM Orders AS o
+GROUP BY o.EmployeeID
+ORDER BY COUNT(o.EmployeeID) DESC
+LIMIT 1) == e.EmployeeID
+
+Peacock
+
+(3)	
+FROM Customers AS c, OrderDetails AS od, Orders AS O, Products AS p
+WHERE c.Country == "Germany" AND c.CustomerID == o.CUstomerID AND
+		o.OrderID == od.OrderID AND od.ProductID == p.ProductID
+GROUP BY p.ProductID
+Order By SUM(Quantity) desc
+
+Boston Crab Meat
+
 
 
 

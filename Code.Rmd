@@ -1,0 +1,99 @@
+---
+title: "Shopify Intern"
+author: "Junwei Hu"
+date: "5/13/2022"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1
+
+## When I first looked at the AOV, it's too large so I thought it might be miscalculated, or there might be some missing values or wrong values in the data. Then I looked at the dataset and did some saummary and calculation
+
+```{r}
+data <- read.csv("2019 Winter Data Science Intern Challenge Data Set - Sheet1.csv")
+head(data)
+
+attach(data)
+```
+
+## Recalculate the AOV by diving the total amount by the total items
+
+```{r}
+total_amount = sum(data$order_amount)
+total_item = sum(data$total_items)
+
+new_AOV = total_amount / total_item
+new_AOV
+
+```
+
+## $357.92 sounds much better than $3145.13 for AOV, but it is still kind high for "relatively affordable sneakers"
+## Next I will dig into each shop to see if there is any wrong values
+
+```{r}
+library("dplyr")
+
+shop_average <- data %>%
+  group_by(shop_id) %>%
+  summarise(total_amount = sum(order_amount),
+            total_item = sum(total_items)) %>%
+  transmute(shop_id = shop_id,
+            shop_average = total_amount/total_item) %>%
+  arrange(desc(shop_average))
+
+shop_average
+
+```
+
+```{r}
+boxplot(shop_average$shop_average, ylab = "AOV per Shop", 
+        horizontal = TRUE)
+
+```
+
+## So from the table and the plot above, there are two outliers, shop 78 with AOV 25725 and shop 42 with AOV 352
+## But I feel like 352 could be reasonable so there must be something wrong with shop 78
+## Then exclude shop 78 and calculate the AOV again
+
+```{r}
+
+mean(shop_average[shop_average$shop_id != 78,]$shop_average)
+
+
+```
+
+```{r}
+median(shop_average$shop_average)
+
+```
+```{r}
+tab <- table(shop_average$shop_average)
+names(tab[tab == max(tab)])
+
+```
+
+## I calculated the new AOV after removing shop 78, which is $152.26
+## But before we figure out what happeed to shop 78, it is not appropriate to just remove shop 78
+## So I calculate the median value of the AOV, which is $153
+## And also the mode value, the most common AOV, which is also $153
+
+
+## I would report mode value of AOV since it is the most common value of all the shops
+## And the value is $153
+
+
+
+
+# Question 2
+
+
+
+
+
+
+
+
